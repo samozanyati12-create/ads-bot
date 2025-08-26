@@ -35,7 +35,48 @@ services:
 
 volumes:
   postgres_data:
+    version: '3.8'
+
+networks:
+  bareos_network:
+    driver: bridge
+
+services:
+  postgres:
+    image: public.ecr.aws/docker/library/postgres:14-alpine
+    container_name: postgres_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: <ваш_пароль_администратора_бд>
+    networks:
+      - bareos_network
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - ~/bareos_database:/var/lib/postgresql/data
+
+  adminer:
+    image: public.ecr.aws/docker/library/adminer:4
+    container_name: adminer_ui
+    restart: unless-stopped
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres_db
+      ADMINER_DEFAULT_DB: bareos
+      ADMINER_DEFAULT_USER: bareos
+      ADMINER_DEFAULT_DBTYPE: postgres
+    networks:
+      - bareos_network
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+    driver: local
 
 networks:
   bot_network:
+
     driver: bridge
