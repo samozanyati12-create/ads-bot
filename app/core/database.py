@@ -5,7 +5,7 @@ from app.core.config import settings
 
 # Создание асинхронного движка для продакшена
 engine = create_async_engine(
-    settings.DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://"),
+    settings.DATABASE_URL,
     echo=False,  # Отключено логирование SQL
     poolclass=NullPool,  # Отключаем пулинг для Celery задач
     pool_pre_ping=True,  # Проверка соединений
