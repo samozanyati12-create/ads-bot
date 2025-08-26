@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: vk_ads_bot
+      POSTGRES_USER: bot_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - bot_network
+    restart: unless-stopped
+
+  bot:
+    build: .
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://bot_user:${DB_PASSWORD}@postgres:5432/vk_ads_bot
+      - BOT_TOKEN=${BOT_TOKEN}
+      - VK_APP_ID=${VK_APP_ID}
+      - VK_SECRET_KEY=${VK_SECRET_KEY}
+      - VK_REDIRECT_URI=${VK_REDIRECT_URI}
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=false
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    networks:
+      - bot_network
+    restart: unless-stopped
+    volumes:
+      - ./logs:/app/logs
+
+volumes:
+  postgres_data:
+
+networks:
+  bot_network:
+    driver: bridge
