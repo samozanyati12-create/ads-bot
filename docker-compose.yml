@@ -35,7 +35,6 @@ services:
 
 volumes:
   postgres_data:
-    version: '3.8'
 
 networks:
   bareos_network:
