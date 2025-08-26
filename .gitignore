@@ -1,0 +1,7 @@
+.env
+/**/*.pyc
+.idea/
+__pycache__/
+**/__pycache__/
+.vscode/
+bot.log
