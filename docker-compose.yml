@@ -37,5 +37,5 @@ volumes:
   postgres_data:
 
 networks:
-  bareos_network:
+  bot_network:
     driver: bridge
